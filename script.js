@@ -1,76 +1,11 @@
-let display = document.getElementById('display');
-let operationDisplay = document.getElementById('operation-display');
-let currentInput = '';
-let operator = null;
-let firstOperand = null;
-
-function updateDisplay(value) {
-  display.value = value || '0';
-}
-
-function updateOperatorDisplay() {
-  if (operator && firstOperand !== null) {
-    operationDisplay.innerText = `${firstOperand} ${operator}`;
-  } else {
-    operationDisplay.innerText = '(none)';
-  }
-}
-
-function appendNumber(num) {
-  currentInput += num;
-  updateDisplay(currentInput);
-}
-
-function clearDisplay() {
-  currentInput = '';
-  firstOperand = null;
-  operator = null;
-  updateDisplay('');
-  updateOperatorDisplay();
-}
-
-function backspace() {
-  currentInput = currentInput.slice(0, -1);
-  updateDisplay(currentInput);
-}
-
-function setOperator(op) {
-  if (currentInput === '') return;
-  firstOperand = parseFloat(currentInput);
-  operator = op;
-  currentInput = '';
-  updateOperatorDisplay();
-}
-
-function calculate() {
-  if (operator === null || currentInput === '') return;
-
-  let secondOperand = parseFloat(currentInput);
-  let result;
-
-  switch (operator) {
-    case '+': result = firstOperand + secondOperand; break;
-    case '-': result = firstOperand - secondOperand; break;
-    case '*': result = firstOperand * secondOperand; break;
-    case '/': result = secondOperand === 0 ? 'Error' : firstOperand / secondOperand; break;
-    case '%': result = (firstOperand * secondOperand) / 100; break;
-  }
-
-  updateDisplay(result);
-  currentInput = result.toString();
-  operator = null;
-  firstOperand = null;
-  updateOperatorDisplay();
-}
-
-function factorial() {
-  let num = parseFloat(currentInput);
-  if (isNaN(num) || num < 0 || !Number.isInteger(num)) {
-    updateDisplay("Err");
-    return;
-  }
-  let fact = 1;
-  for (let i = 2; i <= num; i++) fact *= i;
-  currentInput = fact.toString();
-  updateDisplay(currentInput);
-}
+const $=id=>document.getElementById(id);const S={expr:"",memory:Number(localStorage.getItem("smartcalc-memory")||0),angle:localStorage.getItem("smartcalc-angle")||"DEG",history:JSON.parse(localStorage.getItem("smartcalc-history")||"[]")};if(localStorage.getItem("smartcalc-theme")==="light")document.body.classList.add("light");
+function render(){ $("expression").textContent=S.expr||"Ready";try{$("result").textContent=S.expr?format(calc(S.expr)):"0"}catch{$("result").textContent="0"}}function format(n){if(!Number.isFinite(n))throw Error();return Number(n.toPrecision(12)).toString()}function fact(n){if(!Number.isInteger(n)||n<0||n>170)throw Error();let r=1;for(let i=2;i<=n;i++)r*=i;return r}
+function calc(x){let s=x.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/π/g,"pi");s=s.replace(/(\d+(?:\.\d+)?)%/g,"($1/100)").replace(/(\d+(?:\.\d+)?)!/g,"fact($1)");s=s.replace(/sqrt\(/g,"Math.sqrt(").replace(/sin\(/g,"SIN(").replace(/cos\(/g,"COS(").replace(/tan\(/g,"TAN(").replace(/log\(/g,"Math.log10(").replace(/ln\(/g,"Math.log(").replace(/\^/g,"**");s=s.replace(/\bpi\b/g,"Math.PI").replace(/\be\b/g,"Math.E");s=s.replace(/SIN\(/g,"sinF(").replace(/COS\(/g,"cosF(").replace(/TAN\(/g,"tanF(");if(!/^[0-9+\-*/().,%\sA-Za-z*_]+$/.test(s)||/\b(?:constructor|prototype|window|document|Function|eval)\b/.test(s))throw Error();return Function("sinF","cosF","tanF","fact","return "+s)(a=>Math.sin(S.angle==="DEG"?a*Math.PI/180:a),a=>Math.cos(S.angle==="DEG"?a*Math.PI/180:a),a=>Math.tan(S.angle==="DEG"?a*Math.PI/180:a),fact)}
+function push(v){S.expr+=v;render()}function equals(){if(!S.expr)return;try{const input=S.expr,out=format(calc(S.expr));S.history.unshift({input,output:out});S.history=S.history.slice(0,20);localStorage.setItem("smartcalc-history",JSON.stringify(S.history));S.expr=out;render();drawHistory()}catch{$("expression").textContent="Invalid expression";$("result").textContent="Error"}}function drawHistory(){const box=$("historyList");if(!S.history.length){box.innerHTML='<p class="empty">Your calculations will appear here.</p>';return}box.innerHTML=S.history.map((h,i)=>'<div class="history-item" data-i="'+i+'"><small>'+h.input.replace(/</g,"&lt;")+'</small><b>'+h.output+'</b></div>').join("");box.querySelectorAll(".history-item").forEach(x=>x.onclick=()=>{S.expr=S.history[x.dataset.i].input;render()})}
+document.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>push(b.dataset.v));document.querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>{if(b.dataset.action==="clear"){S.expr="";render()}if(b.dataset.action==="back"){S.expr=S.expr.slice(0,-1);render()}if(b.dataset.action==="equals")equals()});
+document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{const m=b.dataset.m;let val=0;try{val=calc(S.expr||"0")}catch{}if(m==="MC")S.memory=0;if(m==="MR")S.expr+=String(S.memory);if(m==="M+")S.memory+=val;if(m==="M-")S.memory-=val;if(m==="MS")S.memory=val;localStorage.setItem("smartcalc-memory",S.memory);render()});
+$("angle").onclick=()=>{S.angle=S.angle==="DEG"?"RAD":"DEG";$("angle").textContent=S.angle;localStorage.setItem("smartcalc-angle",S.angle);render()};$("angle").textContent=S.angle;
+$("theme").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("smartcalc-theme",document.body.classList.contains("light")?"light":"dark")};
+$("copy").onclick=async()=>{await navigator.clipboard?.writeText($("result").textContent);$("copy").textContent="Copied";setTimeout(()=>$("copy").textContent="Copy",900)};$("clearHistory").onclick=()=>{S.history=[];localStorage.removeItem("smartcalc-history");drawHistory()};
+document.addEventListener("keydown",e=>{if(/[0-9.()+\-*/%^]/.test(e.key))push(e.key);else if(e.key==="Enter"||e.key==="=")equals();else if(e.key==="Backspace"){S.expr=S.expr.slice(0,-1);render()}else if(e.key==="Escape"){S.expr="";render()}});
+drawHistory();render();
