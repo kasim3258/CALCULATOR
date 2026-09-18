@@ -1,44 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Simple Calculator</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="calculator">
-    <div id="operation-display">(none)</div>
-    <input type="text" id="display" placeholder="0" readonly />
-
-    <div class="keys">
-      <button class="func" onclick="clearDisplay()">C</button>
-      <button class="func" onclick="backspace()">⌫</button>
-      <button class="operator" onclick="setOperator('%')">%</button>
-      <button class="operator" onclick="setOperator('/')">÷</button>
-
-      <button class="digit" onclick="appendNumber('7')">7</button>
-      <button class="digit" onclick="appendNumber('8')">8</button>
-      <button class="digit" onclick="appendNumber('9')">9</button>
-      <button class="operator" onclick="setOperator('*')">×</button>
-
-      <button class="digit" onclick="appendNumber('4')">4</button>
-      <button class="digit" onclick="appendNumber('5')">5</button>
-      <button class="digit" onclick="appendNumber('6')">6</button>
-      <button class="operator" onclick="setOperator('-')">−</button>
-
-      <button class="digit" onclick="appendNumber('1')">1</button>
-      <button class="digit" onclick="appendNumber('2')">2</button>
-      <button class="digit" onclick="appendNumber('3')">3</button>
-      <button class="operator" onclick="setOperator('+')">+</button>
-
-      <button class="digit" onclick="appendNumber('0')">0</button>
-      <button class="digit" onclick="appendNumber('.')">.</button>
-      <button class="func" onclick="factorial()">n!</button>
-      <button class="equals" onclick="calculate()">=</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="SmartCalc — advanced scientific calculator"><title>SmartCalc</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head>
+<body><div class="glow g1"></div><div class="glow g2"></div><main class="app"><header><div class="brand"><i>∑</i><div><strong>SmartCalc</strong><small>Scientific calculator</small></div></div><div class="tools"><button id="angle">DEG</button><button id="theme">☾</button></div></header>
+<section class="layout"><div class="card calc"><div class="screen"><div id="expression">Ready</div><div id="result">0</div><button id="copy" class="copy">Copy</button></div>
+<div class="memory"><button data-m="MC">MC</button><button data-m="MR">MR</button><button data-m="M+">M+</button><button data-m="M-">M−</button><button data-m="MS">MS</button></div>
+<div class="scientific"><button data-v="sin(">sin</button><button data-v="cos(">cos</button><button data-v="tan(">tan</button><button data-v="log(">log</button><button data-v="ln(">ln</button><button data-v="sqrt(">√</button><button data-v="^">xʸ</button><button data-v="pi">π</button><button data-v="e">e</button><button data-v="!">n!</button></div>
+<div class="keys"><button class="danger" data-action="clear">AC</button><button data-action="back">⌫</button><button data-v="%">%</button><button class="operator" data-v="/">÷</button>
+<button data-v="7">7</button><button data-v="8">8</button><button data-v="9">9</button><button class="operator" data-v="*">×</button>
+<button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button><button class="operator" data-v="-">−</button>
+<button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button class="operator" data-v="+">+</button>
+<button data-v="0" class="zero">0</button><button data-v=".">.</button><button class="equals" data-action="equals">=</button></div></div>
+<aside class="side"><div class="card history"><div class="side-head"><div><small>HISTORY</small><h2>Recent calculations</h2></div><button id="clearHistory">Clear</button></div><div id="historyList" class="history-list"><p class="empty">Your calculations will appear here.</p></div></div>
+<div class="card shortcuts"><small>SMART TOOLS</small><h2>Built for fast work</h2><div class="feature"><b>⌨️ Keyboard ready</b><span>Type numbers and operators directly.</span></div><div class="feature"><b>📋 One-click copy</b><span>Copy the current answer instantly.</span></div><div class="feature"><b>🧠 Persistent memory</b><span>Memory survives page refreshes.</span></div></div></aside></section><footer>SmartCalc • Supports arithmetic, percentages, powers, roots, trigonometry and scientific functions.</footer></main><script src="script.js"></script></body></html>
